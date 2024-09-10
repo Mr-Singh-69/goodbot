@@ -1,24 +1,27 @@
-const { Client, GatewayIntentBits, Collection } = require("discord.js");
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const keepAlive = require('./keep_alive.js');
 const fs = require('fs');
 const path = require('path');
 
+// Create a new client instance
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// Load commands and events
+// Collection for commands
 client.commands = new Collection();
-const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
-const eventFiles = fs.readdirSync(path.join(__dirname, '/events')).filter(file => file.endsWith('.js'));
 
-// Load commands dynamically
+// Dynamically load command files
+const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
+
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.data.name, command);
 }
 
-// Load events dynamically
+// Dynamically load event files
+const eventFiles = fs.readdirSync(path.join(__dirname, '/events')).filter(file => file.endsWith('.js'));
+
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
     if (event.once) {
@@ -28,8 +31,8 @@ for (const file of eventFiles) {
     }
 }
 
-// Keep-alive script
+// Keep the bot alive (if necessary)
 keepAlive();
 
-// Login to Discord
+// Log in to Discord
 client.login(process.env.token);
