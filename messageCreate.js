@@ -12,6 +12,6 @@ module.exports = {
         if (commandName === "ping") {
             message.channel.send(`Pong! Latency is ${message.client.ws.ping}ms.`);
         }
-        // Add more commands as needed
+        // Add more commands here if needed
     },
 };
